@@ -79,9 +79,15 @@ Constant 100 iterations in the worst case while loop:
     const new_distance = route_length(new_route, distance_matrix);
 ```
 
-This loop executes a constant 100 iterations in the worst case due to the limit set by `max_no_improve`
+`max_no_improve = 100` stops the search after 100 consecutive non-improving attempts. However each improving swap resets the counter, so the loop will keep running while
+the tour keeps getting shorter. Since every accepted swap yields a shorter tour, this is based on the amount of distinct permutations of `n` cities. There are at most
+$n!$ distinct permutations of $n$ cities, and trailing attempts after the last improvement are at most 100 more loops.
 
-Worst case time complexity: $100 * O(n) = O(n)$
+Per-iteration cost: $O(n)$
+
+Max iterations: $n! + 100$
+
+Worst case time complexity: $O(n) = (n! + 100) * O(n) = O(n! * n)$
 
 Worst case memory complexity: All helper functions stay constant-space. `route_length` holds a running
 total and a loop index, `two_opt_swap` swaps in place, and `shuffle` and `random_indicies` only use
