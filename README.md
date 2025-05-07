@@ -50,3 +50,55 @@ Test your new function; I've provided some basic testing code in `code.test.js`.
 What is the worst-case asymptotic time complexity of your implementation? What
 is the worst-case asymptotic memory complexity? Add your answer, including your
 reasoning, to this markdown file.
+
+<hr>
+
+Initial for loop to build route: `for (let i = 0; i < n; i++) {`
+
+$O(n)$
+
+Fisher-Yates shuffle: `shuffle(route);`
+
+`for (let index = array.length - 1; index > 0; index--) {`
+
+$O(n)$
+
+Add up edge weights to compute tour length: `route_length(route, distance_matrix);`
+
+`for (let i = 0; i < route.length - 1; i++) {`
+
+$O(n)$
+
+Constant 100 iterations in the worst case while loop:
+```
+  while (no_improve_count < max_no_improve) {
+    const [i, k] = random_indices(n);
+
+    // Test new_route by appling 2-opt swap, reversing segment between i and k
+    const new_route = two_opt_swap([...best_route], i, k);
+    const new_distance = route_length(new_route, distance_matrix);
+```
+
+`max_no_improve = 100` stops the search after 100 consecutive non-improving attempts. However each improving swap resets the counter, so the loop will keep running while
+the tour keeps getting shorter. Since every accepted swap yields a shorter tour, this is based on the amount of distinct permutations of `n` cities. There are at most
+$n!$ distinct permutations of $n$ cities, and trailing attempts after the last improvement are at most 100 more loops.
+
+Per-iteration cost: $O(n)$
+
+Max iterations: $n! + 100$
+
+Worst case time complexity: $O(n) = (n! + 100) * O(n) = O(n! * n)$
+
+Worst case memory complexity: All helper functions stay constant-space. `route_length` holds a running
+total and a loop index, `two_opt_swap` swaps in place, and `shuffle` and `random_indicies` only use
+a few simple variables. All routes in memory within this algorithm are just a list of `n` citiy indicies, so at most the extra memory needed grows in proportion to the number of cities:
+
+$O(n)$
+
+- Referenced https://www.geeksforgeeks.org/shuffle-a-given-array-using-fisher-yates-shuffle-algorithm/ for shuffle code. All code written by me, just referenced.
+
+- Referenced https://www.geeksforgeeks.org/traveling-salesman-problem-tsp-implementation/ for traveling salesman problem reading. All code written by me, just referenced.
+
+- Referenced https://www.geeksforgeeks.org/travelling-salesman-problem-implementation-using-backtracking/ for traveling salesman problem with local search for this problem. All code written by me, just referenced.
+
+"I certify that I have listed all sources used to complete this exercise, including the use of any Large Language Models. All of the work is my own, except where stated otherwise. I am aware that plagiarism carries severe penalties and that if plagiarism is suspected, charges may be filed against me without prior notice."
